@@ -2,22 +2,39 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["selectRelationCount"]
 }
 
 model Bookmark {
-  id Int @default(autoincrement()) @id
-  url String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title String?
-  content String
+  id         Int        @id @default(autoincrement())
+  url        String     @unique
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  categories Category[]
+  versions   Version[]
+}
+
+model Version {
+  id          Int      @id @default(autoincrement())
+  bookmark    Bookmark @relation(fields: [bookmarkId], references: [id])
+  bookmarkId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String?
+  content     String
   textContent String
-  siteName String?
-  authorInfo String?
+  siteName    String?
+  authorInfo  String?
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String @unique
+  bookmarks Bookmark[]
 }

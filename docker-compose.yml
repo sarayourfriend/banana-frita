@@ -1,0 +1,43 @@
+volumes:
+  local_postgres_data:
+  local_elasticsearch_data:
+
+services:
+  nextjs:
+    ports:
+      - 3000:3000
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app:z
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - elastic
+    command: /app/start
+
+  postgres:
+    image: postgres:13
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data:Z
+    env_file:
+      - .env
+
+  elastic:
+    image: elasticsearch:7.13.4
+    volumes:
+      - local_elasticsearch_data:/usr/share/elasticsearch/data:Z
+    env_file:
+      - .env
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
