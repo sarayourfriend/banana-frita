@@ -1,0 +1,14 @@
+.container {
+	margin: 1em;
+
+	form {
+		max-width: 30em;
+		margin: auto;
+	}
+
+	label {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 0.5em;
+	}
+}

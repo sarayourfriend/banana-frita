@@ -8,12 +8,13 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["selectRelationCount"]
+  previewFeatures = ["selectRelationCount", "referentialActions"]
 }
 
 model Bookmark {
   id         Int        @id @default(autoincrement())
   url        String     @unique
+  description String?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   categories Category[]
@@ -22,7 +23,7 @@ model Bookmark {
 
 model Version {
   id          Int      @id @default(autoincrement())
-  bookmark    Bookmark @relation(fields: [bookmarkId], references: [id])
+  bookmark    Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
   bookmarkId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -36,5 +37,5 @@ model Version {
 model Category {
   id        Int        @id @default(autoincrement())
   name      String @unique
-  bookmarks Bookmark[]
+  bookmarks Bookmark[] @relation(onDelete: Cascade)
 }

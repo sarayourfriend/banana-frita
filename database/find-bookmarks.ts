@@ -4,11 +4,19 @@ import { prisma } from "./client";
 
 export async function findBookmarks(
 	id?: string,
+	category?: string,
 	search?: string
 ): Promise<VersionedBookmark | VersionedBookmark[] | null> {
 	if (typeof id === "string") {
 		return prisma.bookmark.findFirst({
 			where: { id: parseInt(id, 10) },
+			include: { categories: true, versions: true },
+		});
+	}
+
+	if (typeof category === "string") {
+		return prisma.bookmark.findMany({
+			where: { categories: { some: { name: { contains: category } } } },
 			include: { categories: true, versions: true },
 		});
 	}

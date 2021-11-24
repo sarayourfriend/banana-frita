@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { Bookmark } from "@prisma/client";
 import { createBookmark } from "../../database/create-bookmark";
 import { findBookmarks } from "../../database/find-bookmarks";
+import { cors } from "../../lib/cors-middleware";
 
 async function handlePost(
 	req: NextApiRequest,
@@ -10,7 +11,8 @@ async function handlePost(
 ) {
 	const bookmarkOrError = await createBookmark(
 		req.body.url,
-		req.body.categories
+		req.body.categories,
+		req.body.description
 	);
 	if (bookmarkOrError instanceof Error) {
 		return res.status(400).send(bookmarkOrError.message);
@@ -27,19 +29,27 @@ async function handleGet(
 		search,
 		url,
 		categories,
-	}: { id?: string; search?: string; url?: string; categories?: string } =
-		req.query;
+		category,
+		description,
+	}: {
+		id?: string;
+		search?: string;
+		url?: string;
+		categories?: string;
+		category?: string;
+		description?: string;
+	} = req.query;
 
 	// Support "getting" a URL to create a new bookmark as a way of support bookmarklets
 	if (typeof url === "string") {
-		const bookmark = await createBookmark(url, categories);
+		const bookmark = await createBookmark(url, categories, description);
 		if (bookmark instanceof Error) {
 			return res.status(400).send(null);
 		}
 		return res.redirect(`/bookmark/${bookmark.id}`);
 	}
 
-	const bookmarks = await findBookmarks(id, search);
+	const bookmarks = await findBookmarks(id, category, search);
 	if (bookmarks === null) {
 		return res.status(404).send(null);
 	}
@@ -50,6 +60,7 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<Bookmark | Bookmark[] | string | null>
 ) {
+	await cors(req, res);
 	switch (req.method) {
 		case "POST":
 			return handlePost(req, res);

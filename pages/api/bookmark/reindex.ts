@@ -1,10 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { indexBookmarks } from "../../../elastic/index-bookmark";
+import { prisma } from "../../../database/client";
 
 function getAllBookmarks() {
-	const client = new PrismaClient();
-	return client.bookmark.findMany({
+	return prisma.bookmark.findMany({
 		include: {
 			versions: true,
 			categories: true,

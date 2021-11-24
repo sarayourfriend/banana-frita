@@ -1,0 +1,18 @@
+.container {
+	display: flex;
+	width: 100%;
+	border-bottom: 1px solid lightskyblue;
+	padding: 0.5em;
+	height: calc(0.5em * 2 + 1em * 2 + 1em);
+
+	form {
+		width: 100%;
+	}
+
+	input {
+		width: 100%;
+		padding: 1em;
+
+		border: 1px solid lightskyblue;
+	}
+}

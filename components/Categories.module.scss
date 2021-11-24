@@ -1,0 +1,19 @@
+.container {
+	width: 10em;
+	height: 100vh;
+	border-right: 1px solid lightskyblue;
+}
+
+.category {
+	border-bottom: 1px solid lightskyblue;
+	padding: 0.5em;
+	cursor: pointer;
+
+	&:hover {
+		font-weight: bold;
+	}
+
+	&[data-last="true"] {
+		border-bottom: none;
+	}
+}

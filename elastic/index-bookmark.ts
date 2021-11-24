@@ -6,6 +6,7 @@ export async function indexBookmark(bookmark: VersionedBookmark) {
 		index: "bookmarks",
 		body: {
 			url: bookmark.url,
+			description: bookmark.description,
 			categories: bookmark.categories.map((category) => ({
 				name: category.name,
 			})),

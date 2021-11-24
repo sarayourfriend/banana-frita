@@ -9,9 +9,12 @@ export async function searchBookmark(query: string): Promise<string[]> {
 					query,
 					fields: [
 						"url",
+						"description",
 						"categories.name",
 						"versions.textContent",
-						"versions.",
+						"versions.content",
+						"versions.authorInfo",
+						"versions.title",
 					],
 				},
 			},

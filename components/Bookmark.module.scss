@@ -1,0 +1,11 @@
+.container {
+	// screen height minus the height of the search container
+	height: calc(100vh - (0.5em * 2 + 1em * 2 + 1em));
+	overflow-y: scroll;
+	padding: 1em;
+}
+
+.content {
+	max-width: 30em;
+	margin: auto;
+}

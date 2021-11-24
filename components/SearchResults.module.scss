@@ -1,0 +1,19 @@
+.container {
+	height: calc(100vh - (0.5em * 2 + 1em * 2 + 1em));
+	overflow-y: scroll;
+
+	list-style-type: none;
+	padding: 1em;
+	margin: 0;
+
+	li {
+		margin: 0;
+		padding: 0;
+		text-decoration: underline;
+
+		&:hover {
+			cursor: pointer;
+			text-decoration: none;
+		}
+	}
+}

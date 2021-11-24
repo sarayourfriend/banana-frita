@@ -6,7 +6,8 @@ import { indexBookmark } from "../elastic/index-bookmark";
 
 export async function createBookmark(
 	url: string,
-	unparsedCategories?: string
+	unparsedCategories?: string,
+	description?: string
 ): Promise<VersionedBookmark | Error> {
 	let page: string;
 	try {
@@ -28,13 +29,15 @@ export async function createBookmark(
 
 	const { byline, content, textContent, title, siteName } = parsed;
 
-	const categories = unparsedCategories?.split(",") || [];
+	const categories =
+		unparsedCategories?.split(",").map((name) => name.trim()) || [];
 	const existingCategories = await prisma.category.findMany({
 		where: { name: { in: categories } },
 	});
 	const bookmark = await prisma.bookmark.create({
 		data: {
 			url,
+			description,
 			versions: {
 				create: {
 					authorInfo: byline,
@@ -57,12 +60,7 @@ export async function createBookmark(
 		},
 		include: {
 			categories: true,
-			versions: {
-				take: 1,
-				orderBy: {
-					createdAt: "desc",
-				},
-			},
+			versions: true,
 		},
 	});
 	indexBookmark(bookmark);
